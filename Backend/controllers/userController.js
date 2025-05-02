@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
-import userModel from "../models/userModel.js";
+import userModel from "../models/user1Model.js";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import razorpay from "razorpay";
@@ -356,7 +356,6 @@ const razorpayInstance = new razorpay({
 const paymentRazorpay = async (req, res) => {
   try {
     const { appointmentId } = req.body;
-  
 
     const appointmentData = await appointmentModel.findById(appointmentId);
 
@@ -369,7 +368,7 @@ const paymentRazorpay = async (req, res) => {
 
     //creating option for razorpay payment
     const options = {
-      amount: appointmentData.amount*100,
+      amount: appointmentData.amount * 100,
       currency: process.env.CURRENCY,
       receipt: appointmentId,
     };
@@ -386,25 +385,24 @@ const paymentRazorpay = async (req, res) => {
   }
 };
 
-
 //api to verify payment of razorpay
-const verifyRazorpay=async(req,res)=>{
-  try{
-    
-   const {razorpay_order_id}=req.body
-   const orderInfo=await razorpayInstance.orders.fetch(razorpay_order_id)
-   if(orderInfo.status==='paid'){
-    await appointmentModel.findByIdAndUpdate(orderInfo.receipt,{payment:true})
-    res.json({success:true,message:'Payment Successfull'})
-   }else{
-    res.json({success:false,message:'Payment Failed'})
-   }
-
-  }catch(e){
-    console.error(e.message)
-    res.json({success:false,message:'e.message'})
+const verifyRazorpay = async (req, res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    if (orderInfo.status === "paid") {
+      await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
+        payment: true,
+      });
+      res.json({ success: true, message: "Payment Successfull" });
+    } else {
+      res.json({ success: false, message: "Payment Failed" });
+    }
+  } catch (e) {
+    console.error(e.message);
+    res.json({ success: false, message: "e.message" });
   }
-}
+};
 
 export {
   registerUser,
@@ -415,5 +413,5 @@ export {
   listAppointment,
   cancelAppointment,
   paymentRazorpay,
-  verifyRazorpay
+  verifyRazorpay,
 };
