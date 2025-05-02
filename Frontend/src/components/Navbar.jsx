@@ -9,6 +9,8 @@ const Navbar = () => {
 
   const [showMenu, setShowMenu] = useState(false);
 
+  const adminUrl=import.meta.env.VITE_ADMIN_PANEL_URL
+
   const logout = () => {
     setToken("");
     localStorage.removeItem("token");
@@ -39,7 +41,7 @@ const Navbar = () => {
           <li className="py-1">CONTACT</li>
           <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden" />
         </NavLink>
-        <NavLink to={"http://localhost:5174/admin"}>
+        <NavLink to={`${adminUrl}/admin`}>
           <li className="py-1">ADMIN/DOCTOR</li>
           <hr className="border-none outline-none h-0.5 bg-primary w-3/5 m-auto hidden" />
         </NavLink>
